@@ -1,5 +1,6 @@
 class LinksController < ApplicationController
     before_action :set_user
+    before_action :set_link, only: [:update, :destroy]
   
     def index
       @links = @user.links
@@ -16,7 +17,6 @@ class LinksController < ApplicationController
     end
   
     def update
-      @link = @user.links.find(params[:id])
       if @link.update(link_params)
         render json: @link
       else
@@ -25,7 +25,6 @@ class LinksController < ApplicationController
     end
   
     def destroy
-      @link = @user.links.find(params[:id])
       @link.destroy
       head :no_content
     end
@@ -36,8 +35,12 @@ class LinksController < ApplicationController
       @user = User.find(params[:user_id])
     end
   
-    def link_params
-      params.require(:link).permit(:title, :url)
+    def set_link
+      @link = @user.links.find(params[:id])
     end
-end
+  
+    def link_params
+      params.require(:link).permit(:title, :url, :platform, :logo_url)
+    end
+  end
   
