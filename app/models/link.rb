@@ -27,7 +27,6 @@ class Link < ApplicationRecord
     'apple' => 'https://cdn1.iconfinder.com/data/icons/social-media-2285/512/1_Apple_colored_svg-1024.png',
     'google' => 'https://cdn1.iconfinder.com/data/icons/social-media-2285/512/1_Google_colored_svg-1024.png',
     'microsoft' => 'https://cdn1.iconfinder.com/data/icons/social-media-2285/512/1_Microsoft_colored_svg-1024.png'
-    # Add more as needed
   }.freeze
 
   before_save :set_logo_url
@@ -35,6 +34,6 @@ class Link < ApplicationRecord
   private
 
   def set_logo_url
-    self.logo_url = SOCIAL_MEDIA_LOGOS[platform]
+    self.logo_url = SOCIAL_MEDIA_LOGOS[self.platform]
   end
 end
