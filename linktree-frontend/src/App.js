@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from './Navbar';
 import LinkForm from './LinkForm';
+import Login from './Login';
+import Signup from './Signup';
 
 function App() {
+  const [user, setUser] = useState(null);
   const [links, setLinks] = useState([]);
   const [recentlyDeleted, setRecentlyDeleted] = useState([]);
   const [selectedLink, setSelectedLink] = useState(null);
   const [error, setError] = useState(null);
 
-  const userId = 1; // Replace with actual user ID
-
   useEffect(() => {
-    fetchLinks();
-  }, [userId]);
+    if (user) {
+      fetchLinks(user.id);
+    }
+  }, [user]);
 
-  const fetchLinks = async () => {
+  const fetchLinks = async (userId) => {
     try {
       const response = await axios.get(`/users/${userId}/links`);
       setLinks(response.data);
@@ -23,16 +28,32 @@ function App() {
     }
   };
 
+  const handleLoginSuccess = (user) => {
+    setUser(user);
+  };
+
+  const handleSignupSuccess = (user) => {
+    setUser(user);
+  };
+
+  const handleLogout = () => {
+    axios.delete('/users/sign_out').then(() => {
+      setUser(null);
+      setLinks([]);
+      setRecentlyDeleted([]);
+      setSelectedLink(null);
+    });
+  };
+
   const handleSuccess = (newLink) => {
-    console.log('Link created/updated successfully:', newLink);
-    fetchLinks(); // Fetch the updated list of links
+    fetchLinks(user.id); // Fetch the updated list of links
     setSelectedLink(null);
   };
 
   const handleDelete = async (linkId) => {
     try {
       const deletedLink = links.find(link => link.id === linkId);
-      await axios.delete(`/users/${userId}/links/${linkId}`);
+      await axios.delete(`/users/${user.id}/links/${linkId}`);
       setLinks(links.filter(link => link.id !== linkId));
       setRecentlyDeleted([...recentlyDeleted, deletedLink]);
     } catch (error) {
@@ -47,53 +68,77 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl text-center mb-6 text-gray-800 font-bold">Links</h1>
-      {error && <p className="text-red-500 mb-4">Error: {error.message}</p>}
-      <LinkForm userId={userId} link={selectedLink} onSuccess={handleSuccess} />
-      <h2 className="text-2xl text-center my-6 text-gray-700 font-semibold">Active Links</h2>
-      <ul className="space-y-4 max-w-lg mx-auto">
-        {links.map(link => (
-          <li key={link.id} className="bg-white shadow-md p-4 rounded-lg flex justify-between items-center">
-            <div className="flex items-center">
-              {link.logo_url && <img src={link.logo_url} alt={link.platform} className="w-8 h-8 mr-4" />}
-              <a href={link.url} className="text-blue-500 hover:underline">{link.title}</a>
-            </div>
-            <div>
-              <button
-                onClick={() => setSelectedLink(link)}
-                className="px-3 py-1 bg-yellow-500 text-white rounded-md mr-2 hover:bg-yellow-600 transition"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(link.id)}
-                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <h2 className="text-2xl text-center my-6 text-gray-700 font-semibold">Recently Deleted Links</h2>
-      <ul className="space-y-4 max-w-lg mx-auto">
-        {recentlyDeleted.map(link => (
-          <li key={link.id} className="bg-gray-100 shadow-md p-4 rounded-lg flex justify-between items-center">
-            <div className="flex items-center">
-              {link.logo_url && <img src={link.logo_url} alt={link.platform} className="w-8 h-8 mr-4" />}
-              <span>{link.title}</span>
-            </div>
-            <button
-              onClick={() => handleRestore(link.id)}
-              className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-            >
-              Restore
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Navbar user={user} onLogout={handleLogout} />
+      <div className="container mx-auto p-6">
+        <Switch>
+          <Route path="/login">
+            <Login onLoginSuccess={handleLoginSuccess} />
+          </Route>
+          <Route path="/signup">
+            <Signup onSignupSuccess={handleSignupSuccess} />
+          </Route>
+          <Route path="/links">
+            {user ? (
+              <>
+                <LinkForm userId={user.id} link={selectedLink} onSuccess={handleSuccess} />
+                <h2 className="text-2xl text-center my-6 text-gray-700 font-semibold">Active Links</h2>
+                <ul className="space-y-4 max-w-lg mx-auto">
+                  {links.map(link => (
+                    <li key={link.id} className="bg-white shadow-md p-4 rounded-lg flex justify-between items-center">
+                      <div className="flex items-center">
+                        {link.logo_url && <img src={link.logo_url} alt={link.platform} className="w-8 h-8 mr-4" />}
+                        <a href={link.url} className="text-blue-500 hover:underline">{link.title}</a>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => setSelectedLink(link)}
+                          className="px-3 py-1 bg-yellow-500 text-white rounded-md mr-2 hover:bg-yellow-600 transition"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(link.id)}
+                          className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <h2 className="text-2xl text-center my-6 text-gray-700 font-semibold">Recently Deleted Links</h2>
+                <ul className="space-y-4 max-w-lg mx-auto">
+                  {recentlyDeleted.map(link => (
+                    <li key={link.id} className="bg-gray-100 shadow-md p-4 rounded-lg flex justify-between items-center">
+                      <div className="flex items-center">
+                        {link.logo_url && <img src={link.logo_url} alt={link.platform} className="w-8 h-8 mr-4" />}
+                        <span>{link.title}</span>
+                      </div>
+                      <button
+                        onClick={() => handleRestore(link.id)}
+                        className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                      >
+                        Restore
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <p className="text-center text-red-500">Please log in to manage your links.</p>
+            )}
+          </Route>
+          <Route path="/">
+            <h1 className="text-3xl text-center mb-6 text-gray-800 font-bold">Welcome to Linky Link</h1>
+            <p className="text-center text-lg text-gray-600">The best place to store all your important links.</p>
+            {/* add an image under the welcome to linky link */}
+            <img src="/LinkyLogo.png" alt="Linky Link" className="w-1/2 mx-auto mt-6" />
+
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
