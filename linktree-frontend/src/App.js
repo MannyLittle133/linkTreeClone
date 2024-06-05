@@ -69,9 +69,23 @@ function App() {
     setLinks([...links, restoredLink]);
   };
 
+  const handleDemoLogin = async () => {
+    try {
+      const response = await axios.post('/users/sign_in', {
+        user: {
+          email: 'demo@example.com',
+          password: 'password'
+        }
+      });
+      handleLoginSuccess(response.data);
+    } catch (error) {
+      setError('Demo login failed');
+    }
+  };
+
   return (
     <>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={handleLogout} onDemoLogin={handleDemoLogin} />
       <div className="container mx-auto p-6">
         <Routes>
           <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />

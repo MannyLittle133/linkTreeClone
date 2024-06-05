@@ -11,7 +11,12 @@ const Login = ({ onLoginSuccess }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/users/sign_in', { user: { email, password } });
+      const response = await axios.post('/users/sign_in', { user: { email, password } }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
       onLoginSuccess(response.data);
       navigate('/links');
     } catch (error) {

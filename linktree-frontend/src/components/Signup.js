@@ -3,21 +3,21 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = ({ onSignupSuccess }) => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
-    if (password !== passwordConfirmation) {
-      setError('Passwords do not match');
-      return;
-    }
     try {
-      const response = await axios.post('/users', { user: { username, email, password } });
+      const response = await axios.post('/users', { user: { name, email, password } }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
       onSignupSuccess(response.data);
       navigate('/links');
     } catch (error) {
@@ -34,8 +34,8 @@ const SignUp = ({ onSignupSuccess }) => {
           <input
             type="text"
             className="w-full p-2 border border-gray-300 rounded mt-2"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
@@ -56,16 +56,6 @@ const SignUp = ({ onSignupSuccess }) => {
             className="w-full p-2 border border-gray-300 rounded mt-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Confirm Password</label>
-          <input
-            type="password"
-            className="w-full p-2 border border-gray-300 rounded mt-2"
-            value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
         </div>
