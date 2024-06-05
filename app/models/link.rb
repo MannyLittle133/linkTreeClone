@@ -34,6 +34,6 @@ class Link < ApplicationRecord
   private
 
   def set_logo_url
-    self.logo_url = SOCIAL_MEDIA_LOGOS[self.platform]
+    self.logo_url = SOCIAL_MEDIA_LOGOS[platform]
   end
 end
