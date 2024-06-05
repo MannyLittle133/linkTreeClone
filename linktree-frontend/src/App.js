@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import axios from 'axios';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import axios from './axiosConfig';
 import Navbar from './components/Navbar';
 import LinkForm from './components/LinkForm';
 import Login from './components/Login';
@@ -39,12 +39,10 @@ function App() {
   };
 
   const handleLogout = () => {
-    axios.delete('/users/sign_out').then(() => {
-      setUser(null);
-      setLinks([]);
-      setRecentlyDeleted([]);
-      setSelectedLink(null);
-    });
+    setUser(null);
+    setLinks([]);
+    setRecentlyDeleted([]);
+    setSelectedLink(null);
   };
 
   const handleSuccess = (newLink) => {

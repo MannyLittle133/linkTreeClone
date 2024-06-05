@@ -16,6 +16,8 @@ gem 'psych', '< 5.0'
 
 gem 'devise'
 
+gem 'rack-cors', :require => 'rack/cors'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
