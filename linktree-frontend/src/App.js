@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import LinkForm from './components/LinkForm';
 import Login from './components/Login';
 import SignUp from './components/Signup';
+import Account from './components/Account';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -88,6 +89,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/signup" element={<SignUp onSignupSuccess={handleSignupSuccess} />} />
+          <Route path="/account" element={<Account user={user} />} />
           <Route path="/links" element={
             user ? (
               <>

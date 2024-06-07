@@ -31,14 +31,14 @@ const Navbar = ({ user, onLogout, onDemoLogin }) => {
             <>
               <Link to="/links" className="text-white mr-4">My Links</Link>
               <div className="relative inline-block text-left">
-                <button onClick={toggleDropdown} className="flex items-center text-white">
+                <button onClick={toggleDropdown} className="flex items-center text-white focus:outline-none">
                   <img src="/profilePlaceholder.jpg" alt="User" className="h-6 w-6 rounded-full mr-2" />
                   <span className="text-sm">{user.name}</span>
                 </button>
                 {dropdownVisible && (
                   <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                      <Link to="/account" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Account</Link>
+                      <Link to="/account" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" onClick={() => setDropdownVisible(false)}>Account</Link>
                       <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</button>
                     </div>
                   </div>
