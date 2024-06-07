@@ -10,9 +10,7 @@ module LinktreeClone
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-    config.session_store :cookie_store, key: '_your_app_name_session'
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -26,6 +24,7 @@ module LinktreeClone
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # Middleware for CORS
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins 'localhost:3001' # Update this with the origin of your React app

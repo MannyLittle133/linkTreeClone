@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import zxcvbn from 'zxcvbn';
 
 const SignUp = ({ onSignupSuccess }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: '' });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    const strength = zxcvbn(newPassword);
+    setPasswordStrength({
+      score: strength.score,
+      feedback: strength.feedback.suggestions.join(' '),
+    });
+  };
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -22,6 +35,23 @@ const SignUp = ({ onSignupSuccess }) => {
       navigate('/links');
     } catch (error) {
       setError('Error creating account');
+    }
+  };
+
+  const getStrengthColor = (score) => {
+    switch (score) {
+      case 0:
+        return 'red';
+      case 1:
+        return 'orange';
+      case 2:
+        return 'yellow';
+      case 3:
+        return 'lightgreen';
+      case 4:
+        return 'green';
+      default:
+        return 'gray';
     }
   };
 
@@ -55,9 +85,20 @@ const SignUp = ({ onSignupSuccess }) => {
             type="password"
             className="w-full p-2 border border-gray-300 rounded mt-2"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
+          <div className="mt-2">
+            <span>Password strength: </span>
+            <span style={{ color: getStrengthColor(passwordStrength.score) }}>
+              {['Weak', 'Weak', 'Okay', 'Good', 'Strong'][passwordStrength.score]}
+            </span>
+          </div>
+          {passwordStrength.feedback && (
+            <div className="mt-2 text-gray-600">
+              <small>{passwordStrength.feedback}</small>
+            </div>
+          )}
         </div>
         {error && <p className="text-red-500">{error}</p>}
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Sign Up</button>
