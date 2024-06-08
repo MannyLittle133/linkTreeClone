@@ -48,7 +48,7 @@ const Navbar = ({ user, onLogout, onDemoLogin }) => {
           ) : (
             <>
               <HamburgerDropdown />
-              <button onClick={onDemoLogin} className="text-white bg-green-500 px-3 py-2 rounded ml-4">Demo Login</button>
+              <button onClick={onDemoLogin} className="text-white bg-blue-500 px-3 py-2 rounded ml-4 hover:bg-blue-600 transition">Demo Login</button>
             </>
           )}
         </div>
