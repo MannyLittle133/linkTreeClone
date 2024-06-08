@@ -48,7 +48,7 @@ const Account = ({ user }) => {
       {success && <p className="text-green-500">{success}</p>}
       <form onSubmit={handleUpdateInfo} className="bg-white p-6 rounded shadow-md">
         <div className="mb-4">
-          <label className="block text-gray-700">Name</label>
+          <label className="block text-gray-700">Username</label>
           <input
             type="text"
             className="w-full p-2 border border-gray-300 rounded mt-2"
@@ -67,7 +67,7 @@ const Account = ({ user }) => {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Update Info</button>
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Update Info</button>
       </form>
       <form onSubmit={handleUpdatePassword} className="bg-white p-6 rounded shadow-md mt-6">
         <div className="mb-4">
@@ -90,7 +90,18 @@ const Account = ({ user }) => {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Update Password</button>
+        <div className="mb-4">
+          <label className="block text-gray-700">Confirm New Password</label>
+          <input
+            type="password"
+            className="w-full p-2 border border-gray-300 rounded mt-2"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+        </div>
+        {/* highlight button on hover */}
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Update Password</button>
       </form>
     </div>
   );
