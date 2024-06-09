@@ -144,7 +144,11 @@ function App() {
           <Route path="/" element={
             <div className="text-center">
               <h1 className="text-3xl text-center mb-6 text-gray-800 font-bold">Welcome to Linky Link</h1>
-              <p className="text-center text-lg text-gray-600">The best place to store all your important links.</p>
+              {/* <p className="text-center text-lg text-gray-600">Help your followers discover everything you do, with one simple link</p> */}
+              {/* <p className="text-center text-lg text-gray-600">The best place to store all your important links.</p> */}
+              <p className="text-center text-4xl font-bold text-blue-500 bg-white-900 p-8">
+                Help your followers discover everything you do, with one simple link
+              </p>
               <img src="/LinkyLogo.png" alt="Linky Link" className="w-1/2 mx-auto mt-6" />
             </div>
           } />
