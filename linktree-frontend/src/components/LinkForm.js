@@ -39,9 +39,13 @@ const LinkForm = ({ userId, link, onSuccess }) => {
     event.preventDefault();
     try {
       const logoUrl = SOCIAL_MEDIA_LOGOS[platform];
+      let fullUrl = url;
+      if (!fullUrl.startsWith('http://') && !fullUrl.startsWith('https://')) {
+        fullUrl = `http://${fullUrl}`;
+      }
       const response = link
-        ? await axios.put(`/users/${userId}/links/${link.id}`, { title, url, platform, logo_url: logoUrl })
-        : await axios.post(`/users/${userId}/links`, { title, url, platform, logo_url: logoUrl });
+        ? await axios.put(`/users/${userId}/links/${link.id}`, { title, url: fullUrl, platform, logo_url: logoUrl })
+        : await axios.post(`/users/${userId}/links`, { title, url: fullUrl, platform, logo_url: logoUrl });
       onSuccess(response.data);
     } catch (error) {
       setError(error.response.data);
