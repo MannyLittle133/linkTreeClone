@@ -6,6 +6,7 @@ import LinkForm from './components/LinkForm';
 import Login from './components/Login';
 import SignUp from './components/Signup';
 import Account from './components/Account';
+import LinkShow from './components/LinkShow';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -141,11 +142,10 @@ function App() {
               <p className="text-center text-red-500">Please log in to manage your links.</p>
             )
           } />
+          <Route path="/links/show/:id" element={<LinkShow />} />
           <Route path="/" element={
             <div className="text-center">
               <h1 className="text-3xl text-center mb-6 text-gray-800 font-bold">Welcome to Linky Link</h1>
-              {/* <p className="text-center text-lg text-gray-600">Help your followers discover everything you do, with one simple link</p> */}
-              {/* <p className="text-center text-lg text-gray-600">The best place to store all your important links.</p> */}
               <p className="text-center text-4xl font-bold text-blue-500 bg-white-900 p-8">
                 Help your followers discover everything you do, with one simple link
               </p>
